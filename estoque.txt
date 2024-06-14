@@ -1,2 +1,2 @@
-tomate|10|Verduras|10
-morango|10|Frutas|100
+tomate|10|Verduras|95
+manga|10|Frutas|100
