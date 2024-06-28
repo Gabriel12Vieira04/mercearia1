@@ -143,17 +143,7 @@ class ControllerEstoque:
 
 class ControllerVenda:
     def cadastrarVenda(self, nomeProduto, vendedor, comprador, quantidadeVendida):
-        '''
-        return 1: Produto não exite
-        return 2: Quantidade vendida não tem em estoque
-        return 3: Venda efetuada com sucesso
 
-        :param nomeProduto: Nome do produto
-        :param vendedor: Nome do vendedor
-        :param comprador: Nome do comprador
-        :param quantidadeVendida: Quantidade do vendedor
-        :return:
-        '''
         x = DaoEstoque.ler()
         temp = []
         existe = False
@@ -183,14 +173,37 @@ class ControllerVenda:
                     arq.writelines('\n')
 
             if existe == False:
-                #print('O produto não existe')
-                return  1
+                print('O produto não existe')
+                return None
             elif not quantidade:
-                #print('A quantidade vendida não contem em estoque')
-                return 2
+                print('A quantidade vendida não contem em estoque')
+                return None
             else:
-                #print('Venda realizada com sucesso')
-                return 3, valorCompra
+                print('Venda realizada com sucesso')
+                return  valorCompra
 
-a = ControllerVenda()
-a.cadastrarVenda('tomate', 'joao', 'pedro', 5)
+    def relatorioVendas(self):
+        vendas = DaoVenda.ler()
+        produtos = []
+        for i in vendas:
+            nome = i.itensVendidos.nome
+            quantidade = i.quantidadeVendidas
+            tamanho = list(filter(lambda x: x['produto'] == nome, produtos))
+            if len(tamanho) > 0:
+                produtos = list(map(lambda x: {'produto': nome, 'quantidade': x['quantidade'] + quantidade}
+                                    if (x['produto'] == nome) else (x), produtos))
+            else:
+                produtos.append({'produto': nome, 'quantidade': quantidade})
+
+            ordenado = sorted(produtos, key=lambda k: k['quantidade'], reverse=True)
+
+            print("Esses são os produtos vendidos")
+            a = 1
+            for i in ordenado:
+                print(f"==========PRODUTOS [{a}=============")
+                print(f"produto: {i['produto']}\n"
+                      f"quantidade: {i['quantidade']}\n")
+                a += 1
+
+a = ControllerEstoque()
+a.cadastraProduto("manga", "10","Frutas", "100")
